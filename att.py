@@ -40,14 +40,14 @@ def serial_thread():
         while True:
             if ser.in_waiting > 0:
                 line = ser.readline().decode('utf-8').rstrip()
-                print(datetime.now().strftime("[%Y-%m-%d %H:%M:%S]"), "Raw line:", line)
+                # print(datetime.now().strftime("[%Y-%m-%d %H:%M:%S]"), "Raw line:", line)
 
-                if line.startswith("mac:"):
-                    mac_address = line.split("mac:")[1].strip()
+                if line.startswith("MAC:"):
+                    mac_address = line.split("MAC:")[1].strip()
                     print("MAC:", mac_address)
 
-                elif line.startswith("Qr Code:"):
-                    qr_code = line.split("Qr Code:")[1].strip()
+                elif line.startswith("QR Code:"):
+                    qr_code = line.split("QR Code:")[1].strip()
                     print("QR Code:", qr_code)
 
                     if qr_code and qr_code != last_qr_code:
