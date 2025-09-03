@@ -1,9 +1,11 @@
 #include <esp_now.h>
 #include <WiFi.h>
 #include "M5UnitQRCode.h"
-
+//d0,cf,13,e0,dd,50
 // ================== Cấu hình ESP-NOW ==================
-uint8_t broadcastAddress[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+//uint8_t broadcastAddress[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+uint8_t broadcastAddress[] = {0xd0, 0xcf, 0x13, 0xe0, 0xdd, 0x50};
+
 
 // Cấu trúc dữ liệu gửi
 typedef struct struct_message {
