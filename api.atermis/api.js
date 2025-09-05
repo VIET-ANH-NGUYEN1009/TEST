@@ -20,7 +20,7 @@ app.get("/api.artemis/get", async (req, res) => {
   res.json(result.rows);
 });
 
-const server = createServer(app);
+const socketIo = require("socket.io");  // v2.x
 const io = socketIo(server, {
   path: "/api.artemis/socket",
   cors: {
@@ -28,6 +28,7 @@ const io = socketIo(server, {
     methods: ["GET", "POST"]
   }
 });
+
 
 io.on("connection", socket => {
   console.log("✅ Client connected");
