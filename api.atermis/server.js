@@ -27,6 +27,7 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
   },
   path: "/api.artemis/socket",
+  //transports: ["websocket"],
 });
 
 io.on("connection", (socket) => {
