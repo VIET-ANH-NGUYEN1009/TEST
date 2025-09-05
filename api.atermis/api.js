@@ -42,7 +42,17 @@ io.on("connection", (socket) => {
 });
 
 // WebSocket riêng cho ESP32
-const wss = new WebSocket.Server({ server, path: "/esp" });
+const wss = new WebSocket.Server({ noServer: true });
+
+server.on("upgrade", (req, socket, head) => {
+  if (req.url === "/esp") {
+    wss.handleUpgrade(req, socket, head, (ws) => {
+      wss.emit("connection", ws, req);
+    });
+  } else {
+    socket.destroy(); // path khác thì từ chối
+  }
+});
 
 wss.on("connection", (ws) => {
   console.log("ESP32 connected via WebSocket");
