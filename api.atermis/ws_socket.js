@@ -1,3 +1,4 @@
+// server.js
 const express = require("express");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
@@ -60,15 +61,20 @@ wss.on("connection", (ws) => {
         `SELECT date FROM public.qr_control WHERE qr_code = $1 ORDER BY id DESC LIMIT 1`,
         [qr_code]
       );
-
       const { date } = scanResult.rows[0];
 
       const payload = { qr_code, user_id, date };
+      const payloadStr = JSON.stringify(payload);
 
       // --- Bridge WS -> Socket.IO ---
-      io.emit("scan", payload); // gửi realtime cho frontend
+      io.emit("scan", payload); // gửi realtime cho frontend React
 
-      // Trả lời ESP32
+      // --- Broadcast cho tất cả client WS (ESP32 khác) ---
+      wss.clients.forEach(client => {
+        if (client.readyState === WebSocket.OPEN) client.send(payloadStr);
+      });
+
+      // --- Trả lời ESP32 gửi QR ---
       ws.send(JSON.stringify({ status: "ok", ...payload }));
 
     } catch (err) {
@@ -81,4 +87,6 @@ wss.on("connection", (ws) => {
 });
 
 // --- Start server ---
-server.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
+server.listen(PORT, () =>
+  console.log(`✅ Server running at http://localhost:${PORT}`)
+);
