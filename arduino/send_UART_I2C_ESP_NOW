@@ -16,6 +16,7 @@ M5UnitQRCodeUART qrcodeUART;
 #define SCL_PIN 22
 #define MAX_QR_LEN 100
 #define QUEUE_SIZE 5
+#define led 2
 
 bool i2c_ok = false;
 bool uart_ok = false;
@@ -34,9 +35,8 @@ QueueHandle_t qrQueue;
 SemaphoreHandle_t dataMutex;
 String lastQRCode = "";
 unsigned long lastSendTime = 0;
-const unsigned long SEND_INTERVAL = 1000; // Chỉ gửi 1 lần/giây cho cùng QR
+const unsigned long SEND_INTERVAL = 1000; 
 
-// MAC address của receiver (thay bằng MAC thực tế)
 uint8_t broadcastAddress[] = {0xD0, 0xCF, 0x13, 0xE0, 0xDD, 0x50}; 
 esp_now_peer_info_t peerInfo;
 
@@ -50,7 +50,6 @@ uint8_t calculateChecksum(const char* data) {
 }
 
 bool isValidQR(const String& qrData) {
-  // Lọc QR code hợp lệ (URL, số, text...)
   return qrData.length() > 3 && 
          qrData.length() < MAX_QR_LEN-1 &&
          !qrData.startsWith("ERROR");
@@ -74,7 +73,6 @@ void TaskSendESPNOW(void *pvParameters) {
     // Đợi dữ liệu từ queue
     if (xQueueReceive(qrQueue, &qrMsg, portMAX_DELAY) == pdTRUE) {
       
-      // Kiểm tra duplicate trong khoảng thời gian ngắn
       unsigned long currentTime = millis();
       String currentQR = String(qrMsg.qrCode);
       
@@ -84,22 +82,22 @@ void TaskSendESPNOW(void *pvParameters) {
         qrMsg.timestamp = currentTime;
         qrMsg.checksum = calculateChecksum(qrMsg.qrCode);
         
-        // Gửi ESP-NOW
+       
         esp_err_t result = esp_now_send(broadcastAddress, (uint8_t*)&qrMsg, sizeof(qrMsg));
         
         if (result == ESP_OK) {
-          Serial.printf("📤 QR: %s | Time: %lu\n", qrMsg.qrCode, currentTime);
+          Serial.printf("QR: %s | Time: %lu\n", qrMsg.qrCode, currentTime);
           lastQRCode = currentQR;
           lastSendTime = currentTime;
         } else {
-          Serial.printf("❌ ESP-NOW Send Error: %d\n", result);
+          Serial.printf("ESP-NOW Send Error: %d\n", result);
         }
       } else {
         Serial.printf("⏩ Duplicate QR skipped: %s\n", qrMsg.qrCode);
       }
     }
     
-    vTaskDelay(pdMS_TO_TICKS(50)); // Giảm delay để responsive hơn
+    vTaskDelay(pdMS_TO_TICKS(50)); 
   }
 }
 
@@ -109,7 +107,7 @@ void TaskI2C(void *pvParameters) {
   TickType_t lastCheck = 0;
   
   while (1) {
-    // Kiểm tra mỗi 100ms thay vì 200ms
+    
     if ((xTaskGetTickCount() - lastCheck) >= pdMS_TO_TICKS(100)) {
       lastCheck = xTaskGetTickCount();
       
@@ -118,7 +116,7 @@ void TaskI2C(void *pvParameters) {
         
         if (len > 0 && len < MAX_QR_LEN) {
           qrcodeI2C.getDecodeData(buffer, len);
-          buffer[len] = '\0'; // Null terminate
+          buffer[len] = '\0'; 
           
           String qrString = String((char*)buffer);
           
@@ -130,16 +128,16 @@ void TaskI2C(void *pvParameters) {
             strncpy(qrMsg.userId, "ESP_I2C", sizeof(qrMsg.userId)-1);
             qrMsg.userId[sizeof(qrMsg.userId)-1] = '\0';
             
-            // Gửi vào queue để ESP-NOW task xử lý
+          
             if (xQueueSend(qrQueue, &qrMsg, 0) != pdTRUE) {
-              Serial.println("⚠️ Queue full - I2C data dropped");
+              Serial.println(" Queue full - I2C data dropped");
             }
           }
         }
       }
     }
     
-    vTaskDelay(pdMS_TO_TICKS(50)); // Tăng tần suất check
+    vTaskDelay(pdMS_TO_TICKS(50)); 
   }
 }
 
@@ -176,11 +174,8 @@ void TaskUART(void *pvParameters) {
 // ========== System Monitor Task ==========
 void TaskMonitor(void *pvParameters) {
   while (1) {
-    // Monitor hệ thống mỗi 10 giây
-    Serial.printf("📊 Free Heap: %d | Queue: %d | Uptime: %lus\n", 
-                  ESP.getFreeHeap(), 
-                  uxQueueMessagesWaiting(qrQueue),
-                  millis()/1000);
+    
+    digitalWrite(led,HIGH);
     
     vTaskDelay(pdMS_TO_TICKS(10000));
   }
@@ -190,7 +185,8 @@ void TaskMonitor(void *pvParameters) {
 void setup() {
   Serial.begin(115200);
   delay(1000);
-  Serial.println("\n🚀 ESP32 QR Reader Starting...");
+  Serial.println("\n ESP32 QR Reader Starting...");
+  pinMode(led,OUTPUT);
   
   Wire.begin(SDA_PIN, SCL_PIN);
 
