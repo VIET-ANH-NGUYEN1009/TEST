@@ -1,0 +1,127 @@
+#include <Arduino.h>
+#include <Wire.h>
+#include <WiFi.h> 
+#include "M5UnitQRCode.h"
+#include <esp_now.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+
+// ========== QRCode ==========
+M5UnitQRCodeI2C qrcodeI2C;
+M5UnitQRCodeUART qrcodeUART;
+
+#define SDA_PIN 21
+#define SCL_PIN 22
+
+bool i2c_ok = false;
+bool uart_ok = false;
+
+// ========== ESP-NOW ==========
+typedef struct struct_message {
+  char qrCode[100];
+  char userId[100];
+} struct_message;
+
+struct_message myData;
+
+uint8_t broadcastAddress[] = {0xD0, 0xCF, 0x13, 0xE0, 0xDD, 0x50}; 
+esp_now_peer_info_t peerInfo;
+
+void OnDataSent(const wifi_tx_info_t *info, esp_now_send_status_t status) {
+  Serial.print("\r\nLast Packet Send Status:\t");
+  Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
+}
+
+// ========== TASK I2C ==========
+void TaskI2C(void *pvParameters) {
+  while (1) {
+    if (qrcodeI2C.getDecodeReadyStatus() == 1) {
+      uint8_t buffer[512] = {0};
+      uint16_t length = qrcodeI2C.getDecodeLength();
+      qrcodeI2C.getDecodeData(buffer, length);
+
+   
+      snprintf(myData.qrCode, sizeof(myData.qrCode), "%s", (char*)buffer);
+      snprintf(myData.userId, sizeof(myData.userId), "esp1");
+
+  
+      esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *)&myData, sizeof(myData));
+
+      Serial.printf("[I2C] QR: %s | Send: %s\n", myData.qrCode,
+                    result == ESP_OK ? "Success" : "Fail");
+    }
+    vTaskDelay(pdMS_TO_TICKS(200));
+  }
+}
+
+// ========== TASK UART ==========
+void TaskUART(void *pvParameters) {
+  while (1) {
+    if (qrcodeUART.available()) {
+      String data = qrcodeUART.getDecodeData();
+      snprintf(myData.qrCode, sizeof(myData.qrCode), "%s", data.c_str());
+      snprintf(myData.userId, sizeof(myData.userId), "esp1");
+
+      // Gửi qua ESP-NOW
+      esp_err_t result = esp_now_send(broadcastAddress, (uint8_t *)&myData, sizeof(myData));
+
+      Serial.printf("[UART] QR: %s | Send: %s\n", myData.qrCode,
+                    result == ESP_OK ? "Success" : "Fail");
+    }
+    vTaskDelay(pdMS_TO_TICKS(200));
+  }
+}
+
+void setup() {
+  Serial.begin(115200);
+  Wire.begin(SDA_PIN, SCL_PIN);
+
+  // ========== Init I2C ==========
+  Serial.println("Init QRCode I2C...");
+  if (qrcodeI2C.begin(&Wire, UNIT_QRCODE_ADDR, SDA_PIN, SCL_PIN, 100000U)) {
+    Serial.println("I2C Init Success");
+    qrcodeI2C.setTriggerMode(AUTO_SCAN_MODE);
+    i2c_ok = true;
+  } else {
+    Serial.println("I2C Init Fail ");
+  }
+
+  // ========== Init UART ==========
+  Serial.println("Init QRCode UART...");
+  if (qrcodeUART.begin(&Serial2, UNIT_QRCODE_UART_BAUD, 16, 17)) {
+    Serial.println("UART Init Success");
+    qrcodeUART.setTriggerMode(AUTO_SCAN_MODE);
+    uart_ok = true;
+  } else {
+    Serial.println("UART Init Fail -> Bỏ qua");
+  }
+
+  // ========== Init ESP-NOW ==========
+  WiFi.mode(WIFI_STA);
+  if (esp_now_init() != ESP_OK) {
+    Serial.println("Error initializing ESP-NOW");
+    return;
+  }
+  esp_now_register_send_cb(OnDataSent);
+
+  memcpy(peerInfo.peer_addr, broadcastAddress, 6);
+  peerInfo.channel = 0;
+  peerInfo.encrypt = false;
+
+  if (esp_now_add_peer(&peerInfo) != ESP_OK) {
+    Serial.println("Failed to add peer");
+    return;
+  }
+
+  // ========== Task ==========
+  if (i2c_ok) {
+    xTaskCreate(TaskI2C, "TaskI2C", 4096, NULL, 1, NULL);
+  }
+  if (uart_ok) {
+    xTaskCreate(TaskUART, "TaskUART", 4096, NULL, 1, NULL);
+  }
+}
+
+void loop() {
+  
+}
