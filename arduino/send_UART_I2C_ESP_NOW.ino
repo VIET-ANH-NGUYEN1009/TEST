@@ -25,8 +25,8 @@ bool uart_ok = false;
 typedef struct {
   char qrCode[MAX_QR_LEN];
   char userId[16];
-  uint32_t timestamp;  // Thêm timestamp để tránh duplicate
-  uint8_t checksum;    // Thêm checksum để verify data
+  uint32_t timestamp;  
+  uint8_t checksum;    
 } QRMessage;
 
 // ========== Global Variables ==========
@@ -37,7 +37,7 @@ String lastQRCode = "";
 unsigned long lastSendTime = 0;
 const unsigned long SEND_INTERVAL = 1000; 
 
-uint8_t broadcastAddress[] = {0xD0, 0xCF, 0x13, 0xE0, 0xDD, 0x50}; 
+uint8_t broadcastAddress[] = {0xcc, 0xdb, 0xa7, 0x31, 0x56, 0x90}; 
 esp_now_peer_info_t peerInfo;
 
 // ========== Utility Functions ==========
@@ -59,9 +59,9 @@ bool isValidQR(const String& qrData) {
 
 void OnDataSent(const wifi_tx_info_t *info, esp_now_send_status_t status) {
   if (status == ESP_NOW_SEND_SUCCESS) {
-    Serial.printf("✅ Send Success: %lu\n", millis());
+    Serial.printf(" Send Success");
   } else {
-    Serial.printf("❌ Send Failed: %lu\n", millis());
+    Serial.printf(" Send Failed");
   }
 }
 
@@ -191,32 +191,32 @@ void setup() {
   Wire.begin(SDA_PIN, SCL_PIN);
 
   // ========== Init I2C ==========
-  Serial.print("🔧 Init QRCode I2C... ");
+  Serial.print(" Init QRCode I2C... ");
   if(qrcodeI2C.begin(&Wire, UNIT_QRCODE_ADDR, SDA_PIN, SCL_PIN, 100000U)) {
-    Serial.println("✅ Success");
+    Serial.println(" Success");
     qrcodeI2C.setTriggerMode(AUTO_SCAN_MODE);
     i2c_ok = true;
   } else {
-    Serial.println("❌ Failed");
+    Serial.println(" Failed");
   }
 
   // ========== Init UART ==========
-  Serial.print("🔧 Init QRCode UART... ");
+  Serial.print(" Init QRCode UART... ");
   if(qrcodeUART.begin(&Serial2, UNIT_QRCODE_UART_BAUD, 16, 17)) {
-    Serial.println("✅ Success");
+    Serial.println(" Success");
     qrcodeUART.setTriggerMode(AUTO_SCAN_MODE);
     uart_ok = true;
   } else {
-    Serial.println("❌ Failed - Skipping");
+    Serial.println(" Failed - Skipping");
   }
 
   // ========== Init WiFi & ESP-NOW ==========
-  Serial.print("🔧 Init ESP-NOW... ");
+  Serial.print(" Init ESP-NOW... ");
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
   
   if(esp_now_init() != ESP_OK) {
-    Serial.println("❌ ESP-NOW Init Failed!");
+    Serial.println(" ESP-NOW Init Failed!");
     ESP.restart();
   }
   
@@ -228,30 +228,30 @@ void setup() {
   peerInfo.encrypt = false;
   
   if(esp_now_add_peer(&peerInfo) != ESP_OK) {
-    Serial.println("❌ Failed to add peer!");
+    Serial.println(" Failed to add peer!");
     ESP.restart();
   }
   
-  Serial.println("✅ Success");
-  Serial.printf("📡 MAC Address: %s\n", WiFi.macAddress().c_str());
-  Serial.printf("🎯 Target MAC: %02X:%02X:%02X:%02X:%02X:%02X\n", 
+  Serial.println(" Success");
+  Serial.printf(" MAC Address: %s\n", WiFi.macAddress().c_str());
+  Serial.printf(" Target MAC: %02X:%02X:%02X:%02X:%02X:%02X\n", 
                 broadcastAddress[0], broadcastAddress[1], broadcastAddress[2],
                 broadcastAddress[3], broadcastAddress[4], broadcastAddress[5]);
 
   // ========== Init FreeRTOS ==========
-  Serial.print("🔧 Init FreeRTOS... ");
+  Serial.print(" Init FreeRTOS... ");
   
   // Tạo Queue và Mutex
   qrQueue = xQueueCreate(QUEUE_SIZE, sizeof(QRMessage));
   dataMutex = xSemaphoreCreateMutex();
   
   if (!qrQueue || !dataMutex) {
-    Serial.println("❌ Failed to create Queue/Mutex!");
+    Serial.println(" Failed to create Queue/Mutex!");
     ESP.restart();
   }
 
-  // Tạo Tasks với priority khác nhau
-  xTaskCreate(TaskSendESPNOW, "ESP-NOW", 4096, NULL, 3, NULL);  // Priority cao nhất
+
+  xTaskCreate(TaskSendESPNOW, "ESP-NOW", 4096, NULL, 3, NULL);  
   
   if(i2c_ok) {
     xTaskCreate(TaskI2C, "I2C", 3072, NULL, 2, NULL);
@@ -261,10 +261,10 @@ void setup() {
     xTaskCreate(TaskUART, "UART", 3072, NULL, 2, NULL);
   }
   
-  xTaskCreate(TaskMonitor, "Monitor", 2048, NULL, 1, NULL);  // Priority thấp nhất
+  xTaskCreate(TaskMonitor, "Monitor", 2048, NULL, 1, NULL);  
   
-  Serial.println("✅ Success");
-  Serial.println("🎉 System Ready - Scanning for QR codes...\n");
+  Serial.println("Success");
+  Serial.println("System Ready - Scanning for QR codes...\n");
 }
 
 void loop() {
