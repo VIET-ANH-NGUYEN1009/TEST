@@ -1,4 +1,3 @@
-
 //===============thang Converyor===============
 
 if ?.name = "AirST7"
@@ -115,3 +114,41 @@ current.IsAvailable := false
 current.CurrentPred := ?
 current.MoveObject(?)
 @.Stopped := false;
+
+
+
+
+//===============Input===============
+
+AirST6.Speed = Input["Speed",1]
+AirST4.Speed = Input["Speed",2]
+AirST.Speed = Input["Speed",3]
+AirST2.Speed = Input["Speed",4]
+AirST11.Speed = Input["Speed",5]
+AirST111.Speed = Input["Speed",6]
+AirST22.Speed = Input["Speed",7]
+AirST7.Time=Input["Time",8]
+
+
+//===============Stock===============
+
+.UserObjects.Tray2.create(AirST221)
+.UserObjects.PartA.create(AirST221.cont,1)
+
+//===============ShifCalenda===============
+
+for var i :=1 to .UserObjects.AirST.numChildren
+    .UserObjects.AirST.childNo(i).shiftCalendarObject:="ShiftCalendar"
+next
+
+
+
+//===============Đếm số tray===============
+
+Tạo số Varialble trc tên Tray1_counter
+
+if @.name = "Tray1"
+    Tray1_counter += 1
+end
+
+
