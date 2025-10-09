@@ -1,0 +1,165 @@
+﻿
+.PopupAll {
+    display: inline;
+}
+
+.HidePopupAll {
+    display: none;
+}
+
+.modal {
+    /*display: none;*/
+    position: absolute;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 2px;
+    border: 1px solid #888;
+    width: 90%;
+/*    max-height: 100vh;
+*/    border-radius: 15px;
+}
+
+.modal-header {
+    padding: 16px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    position: sticky; /* làm header dính ở đầu khi cuộn nội dung trong modal-body */
+    top: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Tiêu đề sẽ không bị cuộn với body nếu header là sticky */
+.sticky-title {
+    margin: 0;
+    padding: 0;
+    font-size: 1.25rem;
+}
+
+/* Khu vực nội dung cuộn bên trong modal */
+.modal-body {
+    padding: 16px;
+    overflow: auto; /* cho phép cuộn khi nội dung vượt height của modal-content */
+    flex: 1 1 auto;
+}
+
+.modal-content h2 {
+    font-family: 'Damion', cursive;
+    font-weight: bold;
+    /*    color: #4caf50;*/
+    font-size: 25px;
+    text-align: center;
+    position: relative;
+    width: 90%;
+    /* Gradient màu chữ */
+    background: linear-gradient(90deg, #4caf50, #81c784);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* Tương thích trình duyệt khác */
+    background-clip: text;
+    color: transparent;
+}
+
+.bold_lb {
+    font-weight: bold;
+}
+
+.hd_lb {
+    color: #3c4142;
+}
+
+.form-input,
+.form-textarea {
+    width: 100%;
+    /*padding: 6px;*/
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    transition: border-color 0.1s, transform 0.1s;
+}
+
+    .form-input:focus,
+    .form-textarea:focus {
+        border-color: #6f6df4;
+        outline: none;
+        transform: scale(1.02);
+    }
+
+.form-textarea {
+    resize: none;
+    height: 35px
+}
+
+.col-4 {
+    float: left;
+    /*width: 27.33%;
+    margin: 40px 3%;*/
+    width: 23%;
+    margin: 0.75% 1%;
+    /**/ position: relative;
+}
+
+.col-2 {
+    float: left;
+    /*width: 27.33%;
+    margin: 40px 3%;*/
+    width: 48%;
+    margin: 0.75% 1%;
+    /**/ position: relative;
+}
+
+.form-group {
+    margin-bottom: 5px;
+    color: #4c6157;
+}
+
+    .form-group > label {
+        font-size: 12px;
+        font-weight: normal
+    }
+
+.lb_items {
+    color: black;
+    width: 100%
+}
+
+col-md-2, col-md-8 {
+    position: relative;
+    width: 100%;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+
+
+.icon_detail {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    line-height: 0;
+}
+
+    .icon_detail img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+    }
+
+.label-scroll {
+    display: inline-block;
+    height: 35px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}

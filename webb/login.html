@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Basic Page Info -->
+    <meta charset="utf-8" />
+    <title>Login - ECN control</title>
+    <!-- Site favicon -->
+    <link rel="apple-touch-icon"
+          sizes="180x180"
+          href="vendors/images/apple-touch-icon.png" />
+    <link rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="vendors/images/favicon-32x32.png" />
+    <link rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="vendors/images/favicon-16x16.png" />
+    <!-- Mobile Specific Metas -->
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <!-- Google Font -->
+    <link href="vendors/styles/googleapis.css" rel="stylesheet" />
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="vendors/styles/core.css" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="vendors/styles/icon-font.min.css" />
+    <link rel="stylesheet" type="text/css" href="vendors/styles/style.css" />
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script src="vendors/scripts/googletag.js"></script>
+
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
+
+        gtag("config", "G-GBZ3SGGX85");
+    </script>
+    <style>
+        /*.alert-box {
+            display: none;
+            position: fixed;
+            top: 25%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px 25px;
+            border-radius: 8px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+            font-size: 18px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+            min-width: 300px;
+            max-width: 400px;
+            z-index: 10001
+        }*/
+
+        /* Nút đóng */
+        /*.alert-box button {
+                margin-top: 12px;
+                padding: 8px 15px;
+                border: none;
+                background: #e74c3c;
+                color: white;
+                cursor: pointer;
+                border-radius: 4px;
+                font-size: 16px;
+                transition: background 0.3s;
+            }
+
+                .alert-box button:hover {
+                    background: #c0392b;
+                }*/
+        /* Hiệu ứng mở */
+        /*@keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }*/
+        /* Hiệu ứng đóng */
+        /*@keyframes fadeOut {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -40%);
+            }
+        }*/
+        .background_pop {
+            display: none;
+            background-color: white;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            position: fixed;
+            left: 0;
+            top: 0;
+            opacity: 0.7
+        }
+
+        /*        .alert-box {
+            display: none;
+            position: fixed;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #3498db, #9b59b6);
+            color: #ecf0f1;
+            padding: 20px 25px;
+            border-radius: 12px;
+            box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.4);
+            font-size: 20px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+            min-width: 350px;
+            max-width: 500px;
+
+            z-index: 10001;
+        }*/
+        .alert-box {
+            display: none;
+            position: fixed;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px 25px;
+            border-radius: 8px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+            font-size: 18px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+            min-width: 350px;
+            max-width: 500px;
+            z-index: 10001;
+        }
+            /* Button styling */
+            .alert-box button {
+                margin-top: 12px;
+                padding: 10px 20px;
+                border: none;
+                background: #e74c3c;
+                color: white;
+                cursor: pointer;
+                border-radius: 6px;
+                font-size: 16px;
+                transition: all 0.3s ease;
+            }
+
+                .alert-box button:hover {
+                    background: #c0392b;
+                    transform: scale(1.05);
+                }
+
+        /* Entry animation */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        /* Exit animation */
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -40%);
+            }
+        }
+
+       /* .bgr {
+            background-color: #dce8e8
+        }*/
+    </style>
+</head>
+<body class="login-page">
+    <div class="login-header box-shadow">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <div class="brand-logo">
+                <a href="login.html">
+                    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" width="280" height="80">
+
+                        <!-- Background -->
+                        <!--<rect x="0" y="0" fill="#222" width="350" height="80" />-->
+                        <!-- Text using the #pattern in defs as the fill -->
+                        <text x="50%" text-anchor="middle" y="40%" dy="0.4em" fill="url(#pattern)" font-family="sonos-logoregular" font-size="40px" font-weight="bold">ECN Control </text>
+
+                        <defs>
+                            <!-- Da gradient -->
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0">
+                                <stop offset="0%" style="stop-color:#33235b;" />
+                                <stop offset="25%" style="stop-color:#D62229;" />
+                                <stop offset="50%" style="stop-color:#E97639;" />
+                                <stop offset="75%" style="stop-color:#792042;" />
+                                <stop offset="100%" style="stop-color:#33235b;" />
+                            </linearGradient>
+
+                            <!-- Stitch 2 gradients together for seamless animation  -->
+                            <pattern id="pattern" x="0" y="0" width="300%" height="100%" patternUnits="userSpaceOnUse">
+                                <rect x="0" y="0" width="150%" height="100%" fill="url(#gradient)">
+                                    <animate attributeType="XML"
+                                             attributeName="x"
+                                             from="0" to="150%"
+                                             dur="7s"
+                                             repeatCount="indefinite" />
+                                </rect>
+                                <rect x="-150%" y="0" width="150%" height="100%" fill="url(#gradient)">
+                                    <animate attributeType="XML"
+                                             attributeName="x"
+                                             from="-150%" to="0"
+                                             dur="7s"
+                                             repeatCount="indefinite" />
+                                </rect>
+                            </pattern>
+
+                            <!-- Pull in font -->
+                            <!-- Copied from: https://static.sonos.com/v1/fonts/logo/sonos-logo-regular-webfont.svg -->
+                            <font horiz-adv-x="1024">
+                                <font-face font-family="sonos-logoregular" units-per-em="2048" ascent="1920" descent="-128" />
+                                <missing-glyph horiz-adv-x="500" />
+                                <glyph unicode="&#xd;" horiz-adv-x="682" />
+                                <glyph unicode=" " />
+                                <glyph unicode="N" horiz-adv-x="812" d="M0 412h150v636l662 -664v1000h-148v-640l-664 664v-996z" />
+                                <glyph unicode="O" horiz-adv-x="1946" d="M470 896q0 210 150 364q148 148 362 148t362 -148q150 -154 150 -364q0 -212 -150 -362t-362 -150t-362 150t-150 362zM620 896q0 -152 106 -258q104 -108 256 -108q154 0 256 108q108 108 108 258q0 148 -108 260q-104 108 -256 108q-148 0 -256 -108 q-106 -110 -106 -260z" />
+                                <glyph unicode="S" horiz-adv-x="674" d="M0 1124q0 -58 26 -110q28 -52 80 -90q32 -26 86 -52q68 -30 124 -46q124 -40 174 -84q34 -30 34 -74q0 -52 -48 -92q-56 -42 -138 -42q-62 0 -122 26q-38 16 -72 40l-118 -80q0 -4 24 -24q24 -24 60 -46q108 -66 228 -66q70 0 132 22q66 24 108 62q44 38 72 92 q24 54 24 110q0 54 -26 110q-28 52 -78 90q-34 28 -88 52q-38 18 -122 46q-122 36 -174 82q-36 32 -36 74q0 54 50 92q54 44 138 44q60 0 120 -26q32 -12 72 -40l120 80q-2 0 -24 24q-18 18 -62 46q-104 64 -226 64q-74 0 -132 -20t-110 -62q-48 -44 -70 -92 q-26 -56 -26 -110z" />
+                                <glyph unicode="&#xa0;" />
+                                <glyph unicode="&#x2000;" horiz-adv-x="704" />
+                                <glyph unicode="&#x2001;" horiz-adv-x="1408" />
+                                <glyph unicode="&#x2002;" horiz-adv-x="704" />
+                                <glyph unicode="&#x2003;" horiz-adv-x="1408" />
+                                <glyph unicode="&#x2004;" horiz-adv-x="469" />
+                                <glyph unicode="&#x2005;" horiz-adv-x="352" />
+                                <glyph unicode="&#x2006;" horiz-adv-x="234" />
+                                <glyph unicode="&#x2007;" horiz-adv-x="234" />
+                                <glyph unicode="&#x2008;" horiz-adv-x="176" />
+                                <glyph unicode="&#x2009;" horiz-adv-x="281" />
+                                <glyph unicode="&#x200a;" horiz-adv-x="78" />
+                                <glyph unicode="&#x202f;" horiz-adv-x="281" />
+                                <glyph unicode="&#x205f;" horiz-adv-x="352" />
+                                <glyph unicode="&#x25fc;" horiz-adv-x="1000" d="M0 0z" />
+                            </font>
+                        </defs>
+                    </svg>
+                    <!--<svg width="350" height="80" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="threeColorGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#77a1d3;stop-opacity:1" />
+                <stop offset="50%" style="stop-color:#79cbca;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#e684ae;stop-opacity:1" />
+            </linearGradient>
+            <style>
+                @keyframes zoomLetters {
+                    0% {
+                        opacity: 0.5;
+                        transform: scale(1);
+                    }
+
+                    50% {
+                        opacity: 1;
+                        transform: scale(1.5);
+                    }
+
+                    100% {
+                        opacity: 1;
+                        transform: scale(1);
+                    }
+                }
+
+                .letter {
+                    animation: zoomLetters 2s ease-in-out infinite;
+                    transform-origin: left center;
+                }
+            </style>
+        </defs>
+        <rect x="0" y="0" width="350" height="60" fill="white" />
+        <text x="10" y="45" font-size="35" font-weight="bold" fill="url(#threeColorGradient)" font-family="Graffiti, cursive" letter-spacing="-6">
+            <tspan class="letter" style="animation-delay: 0s;">E</tspan>
+            <tspan class="letter" style="animation-delay: 0.3s;">C</tspan>
+            <tspan class="letter" style="animation-delay: 0.6s;">N</tspan>
+            <tspan class="letter" style="animation-delay: 0.9s;"> </tspan>
+            <tspan class="letter" style="animation-delay: 0.9s;"> </tspan>
+            <tspan class="letter" style="animation-delay: 0.9s;"> </tspan>
+            <tspan class="letter" style="animation-delay: 1.2s;">s</tspan>
+            <tspan class="letter" style="animation-delay: 1.5s;">y</tspan>
+            <tspan class="letter" style="animation-delay: 1.8s;">s</tspan>
+            <tspan class="letter" style="animation-delay: 2.1s;">t</tspan>
+            <tspan class="letter" style="animation-delay: 2.4s;">e</tspan>
+            <tspan class="letter" style="animation-delay: 2.7s;">m</tspan>
+        </text>
+    </svg>-->
+                </a>
+            </div>
+            <!--<div class="login-menu">
+                <ul>
+                    <li><a href="register.html">Go to ENG Postal system to Register</a></li>
+                </ul>
+            </div>-->
+        </div>
+    </div>
+    <div class="alert-box" id="customAlert">
+        <p id="alertMessage">Đây là thông báo tùy chỉnh!</p>
+        <button onclick="closeAlert()">OK</button>
+    </div>
+    <div id="background_pop" class="background_pop"></div>
+
+    <div class="login-wrap d-flex align-items-center flex-wrap justify-content-center bgr">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 col-lg-7">
+                    <!--<img src="src/images/istockphoto-1194783078-612x612.jpg" alt="" />-->
+                    <img src="vendors/images/login-page-img.png" alt="" />
+                    <!--<img src="vendors/images/login_img.png" alt="" />-->
+                    <!--<img src="vendors/images/logo_login.png" alt="" />-->
+
+
+                </div>
+                <div class="col-md-6 col-lg-5">
+                    <div class="login-box bg-white box-shadow border-radius-10">
+                        <div class="login-title">
+                            <h2 class="text-center text-primary">Login To ECN system</h2>
+                        </div>
+                        <form>
+
+                            <div class="input-group custom">
+                                <input type="text" class="form-control form-control-lg" placeholder="Username" id="username" name="username" />
+                                <div class="input-group-append custom">
+                                    <span class="input-group-text">
+                                        <i class="icon-copy dw dw-user1"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="input-group custom">
+                                <input type="password" class="form-control form-control-lg" placeholder="**********" id="password" name="password" />
+                                <div class="input-group-append custom">
+                                    <span class="input-group-text">
+                                        <i class="dw dw-padlock1"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row pb-30">
+                                <div class="col-6">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox"
+                                               class="custom-control-input"
+                                               id="customCheck1" />
+                                        <label class="custom-control-label" for="customCheck1">Remember</label>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="forgot-password">
+                                        <a href="forgot-password.html">Forgot Password</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="input-group mb-0">
+                                        <!--<input id="btnsignin" class="btn btn-primary btn-lg btn-block" type="submit" value="Sign In">-->
+                                        <button id="btnsignin" type="submit" tabindex="0" class="btn btn-primary btn-lg btn-block">Sign In</button>
+
+                                    </div>
+                                    <div class="font-16 weight-600 pt-10 pb-10 text-center"
+                                         data-color="#707373">
+                                        OR
+                                    </div>
+                                   
+                                    <div class="input-group mb-0">
+                                        <a class="btn btn-outline-primary btn-lg btn-block"
+                                           href="register.html">Go to Portal site for Register Account</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- welcome modal end -->
+    <!-- js -->
+    <script src="vendors/scripts/core.js"></script>
+    <script src="vendors/scripts/script.min.js"></script>
+    <script src="vendors/scripts/process.js"></script>
+    <script src="vendors/scripts/layout-settings.js"></script>
+    <script type="text/javascript">
+        var versionUpdate = (new Date()).getTime();
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "vendors/scripts/Login.js?v=" + versionUpdate;
+        document.body.appendChild(script);
+    </script>
+
+</body>
+</html>
