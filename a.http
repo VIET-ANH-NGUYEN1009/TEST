@@ -1,0 +1,226 @@
+<div class="container">
+      <h2 class="text-center mb-4">🧭 Mini API Tester</h2>
+
+      <div class="mb-3">
+        <label class="form-label">API URL</label>
+        <input
+          type="text"
+          id="url"
+          class="form-control"
+          placeholder="https://example.com/api/endpoint"
+        />
+      </div>
+
+      <div class="mb-3 d-flex">
+        <select id="method" class="form-select me-2" style="width: 150px">
+          <option>GET</option>
+          <option selected>POST</option>
+          <option>PUT</option>
+          <option>DELETE</option>
+        </select>
+        <button id="send" class="btn btn-primary flex-fill">
+          Send Request
+        </button>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Request Body (JSON)</label>
+        <textarea
+          id="body"
+          class="form-control"
+          rows="6"
+          placeholder='{"name": "John"}'
+        ></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Response</label>
+        <pre id="response">(Chưa có phản hồi)</pre>
+      </div>
+    </div>
+
+    <script>
+      document.getElementById("send").addEventListener("click", async () => {
+        const url = document.getElementById("url").value.trim();
+        const method = document.getElementById("method").value;
+        const bodyText = document.getElementById("body").value.trim();
+        const responseBox = document.getElementById("response");
+        responseBox.textContent = "⏳ Đang gửi request...";
+
+        try {
+          const options = {
+            method,
+            headers: { "Content-Type": "application/json" },
+          };
+          if (method !== "GET" && method !== "DELETE" && bodyText) {
+            options.body = bodyText;
+          }
+
+          const res = await fetch(url, options);
+          const text = await res.text();
+
+          try {
+            const json = JSON.parse(text);
+            responseBox.textContent = JSON.stringify(json, null, 2);
+          } catch {
+            responseBox.textContent = text;
+          }
+        } catch (err) {
+          responseBox.textContent = "❌ Lỗi: " + err.message;
+        }
+      });
+    </script>
+
+
+
+
+
+
+
+
+/* 🎨 RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: #f3f4f6;
+  color: #333;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 30px;
+}
+
+/* 🧭 Container */
+.container {
+  background: white;
+  width: 800px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  padding: 30px 40px;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+h2 {
+  text-align: center;
+  color: #007bff;
+  margin-bottom: 25px;
+}
+
+/* 🧩 Input styles */
+label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+}
+
+input[type="text"],
+select,
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 18px;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+  outline: none;
+}
+
+textarea {
+  font-family: monospace;
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* ⚙️ Method + Button */
+.method-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+select {
+  flex: 0 0 150px;
+  cursor: pointer;
+}
+
+button {
+  flex: 1;
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+button:hover {
+  background: #0069d9;
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+/* 🧾 Response */
+pre {
+  background: #1e1e1e;
+  color: #dcdcdc;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 14px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.response-title {
+  margin-top: 10px;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.footer {
+  text-align: center;
+  font-size: 13px;
+  color: #888;
+  margin-top: 25px;
+}
+
+.footer a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+
