@@ -32,3 +32,6 @@ chmod +x ~/Desktop/artemis.desktop
 
 
 Ra ngoài Desktop sẽ thấy icon Artemis. Nhấp đúp vào → mở ngay trang web.
+
+
+https://docs.google.com/document/d/1Rb8UaDynwUrwcfDJrvctgYneU0n5FE1Cy_KCjjXtrVY/edit?usp=sharing
